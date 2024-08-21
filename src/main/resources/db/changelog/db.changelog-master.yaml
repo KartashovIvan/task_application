@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/202408170943-create-users.xml
+  - include:
+      file: db/changelog/202408181158-create-tasks.xml
+  - include:
+      file: db/changelog/202408181210-create-comments.xml

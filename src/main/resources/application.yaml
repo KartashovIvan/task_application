@@ -1,0 +1,29 @@
+server:
+  port: 8004
+
+spring:
+  liquibase:
+    enabled: true
+  jpa:
+      show-sql: true
+      ddl-auto: none
+      properties:
+        hibernate:
+          format_sql: true
+  datasource:
+    url: jdbc:postgresql://192.168.0.100:5432/task_db
+    username: student
+    password: student
+    driverClassName: org.postgresql.Driver
+
+jwt:
+  security:
+    token: cd30e0f4dfc42f7a2eeeefd0cf7f7fd68ab116ca73a55ee326b3d5822d4cdd3b
+
+
+#logging:
+#  appender: FILE
+#  level:
+#    root: info
+#  file:
+#    name: log/logs.log

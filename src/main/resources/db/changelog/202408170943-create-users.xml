@@ -1,0 +1,8 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="202408170943-create-users.xml" author="kartashov">
+        <sql>
+            create table users (id serial primary key, email varchar(255) not null, name varchar(100) not null, password varchar(100) not null);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
