@@ -1,6 +1,6 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-    <changeSet id="202408170943-create-users.xml" author="kartashov">
+    <changeSet id="202408181158-create-tasks.xml" author="kartashov">
         <sql>
             create table tasks (id serial primary key, title varchar(255) not null, description text, status varchar(50) not null, priority varchar(50) not null, author bigint references users(id) not null, executor bigint references users(id));
         </sql>

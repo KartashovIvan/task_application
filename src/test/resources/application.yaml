@@ -3,17 +3,10 @@ server:
 
 spring:
   liquibase:
-    contexts: prod
+    contexts: test
     enabled: true
-
-  jpa:
-      show-sql: true
-      ddl-auto: none
-      properties:
-        hibernate:
-          format_sql: true
   datasource:
-    url: jdbc:postgresql://192.168.0.100:5432/task_db
+    url: jdbc:postgresql://192.168.0.100:5432/task_test_db
     username: student
     password: student
     driverClassName: org.postgresql.Driver

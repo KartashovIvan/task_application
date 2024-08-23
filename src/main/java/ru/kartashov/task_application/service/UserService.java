@@ -3,14 +3,14 @@ package ru.kartashov.task_application.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.kartashov.task_application.dto.SignUpRequest;
-import ru.kartashov.task_application.dto.secret.JwtAuthenticationResponse;
-import ru.kartashov.task_application.dto.secret.RefreshTokenResponse;
-import ru.kartashov.task_application.dto.secret.SignInRequest;
+import ru.kartashov.task_application.dto.request.SignUpRequest;
+import ru.kartashov.task_application.dto.response.secret.JwtResponse;
+import ru.kartashov.task_application.dto.request.SignInRequest;
 import ru.kartashov.task_application.entity.User;
 import ru.kartashov.task_application.repository.UserRepository;
 import ru.kartashov.task_application.security.JwtService;
-import javax.naming.AuthenticationException;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public JwtAuthenticationResponse create(SignUpRequest request) {
+    public JwtResponse create(SignUpRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("User with email %s already exist".formatted(request.getEmail()));
         }
@@ -32,6 +32,11 @@ public class UserService {
         if (userRepository.existsByName(request.getName())) {
             throw new RuntimeException("User with name %s already exist".formatted(request.getName()));
         }
+
+        if (Objects.isNull(request.getPassword()) || request.getPassword().isBlank()) {
+            throw new RuntimeException("Password can't be empty");
+        }
+
         User user = parseDtoToUser(request);
         save(user);
         return jwtService.generateAuthToken(user.getEmail());
@@ -42,18 +47,9 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User with email %s not registrant".formatted(email)));
     }
 
-    public JwtAuthenticationResponse singIn(SignInRequest userCredentialsDTO) {
+    public JwtResponse singIn(SignInRequest userCredentialsDTO) {
         User user = findByCredentials(userCredentialsDTO);
         return jwtService.generateAuthToken(user.getEmail());
-    }
-
-    public JwtAuthenticationResponse refreshToken(RefreshTokenResponse refreshTokenDTO) throws AuthenticationException {
-        String refresh = refreshTokenDTO.getRefreshToken();
-        if (refresh != null && jwtService.validateJwtToken(refresh)) {
-            User user = takeUserByEmail(jwtService.getEmailFromToken(refresh));
-            return jwtService.refreshBaseToken(user.getEmail(), refresh);
-        }
-        throw new AuthenticationException("Invalid refresh token");
     }
 
     private User parseDtoToUser(SignUpRequest request) {

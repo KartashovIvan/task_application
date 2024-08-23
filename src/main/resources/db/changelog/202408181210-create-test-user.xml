@@ -1,8 +1,8 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-    <changeSet id="202408181210-create-comments.xml" author="kartashov">
+    <changeSet id="202408181210-create-test-user.xml" author="kartashov" context="test">
         <sql>
-            create table comments (id serial primary key, author bigint references users(id),text text, task bigint references tasks(id));
+            insert into users (email, name, password) values ('test@mail.ru', 'test_name', '$2a$10$tUGCV1S3PQ9oPAb7o4AyYeQXtu28ulNCaySSQ1SfWY.R3IEihMhZm');
         </sql>
     </changeSet>
 </databaseChangeLog>

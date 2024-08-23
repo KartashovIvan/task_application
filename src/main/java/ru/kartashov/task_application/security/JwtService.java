@@ -1,6 +1,6 @@
 package ru.kartashov.task_application.security;
 
-import ru.kartashov.task_application.dto.secret.JwtAuthenticationResponse;
+import ru.kartashov.task_application.dto.response.secret.JwtResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -19,17 +20,9 @@ public class JwtService {
     @Value("${jwt.security.token}")
     private String jwt;
 
-    public JwtAuthenticationResponse generateAuthToken(String email) {
-        JwtAuthenticationResponse jwtDTO = new JwtAuthenticationResponse();
+    public JwtResponse generateAuthToken(String email) {
+        JwtResponse jwtDTO = new JwtResponse();
         jwtDTO.setToken(generateJwtToken(email));
-        jwtDTO.setRefreshToken(generateRefreshToken(email));
-        return jwtDTO;
-    }
-
-    public JwtAuthenticationResponse refreshBaseToken(String email, String refreshToken) {
-        JwtAuthenticationResponse jwtDTO = new JwtAuthenticationResponse();
-        jwtDTO.setToken(generateJwtToken(email));
-        jwtDTO.setRefreshToken(refreshToken);
         return jwtDTO;
     }
 
@@ -46,9 +39,7 @@ public class JwtService {
         try {
             Jwts.parser()
                     .verifyWith(getSingInKey())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+                    .build();
             return true;
         } catch (ExpiredJwtException e) {
             log.error("Expire JwtException ", e);
@@ -67,15 +58,7 @@ public class JwtService {
     private String generateJwtToken(String email) {
         Date date = Date.from(LocalDateTime.now().plusHours(1).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
-                .subject(email)
-                .expiration(date)
-                .signWith(getSingInKey())
-                .compact();
-    }
-
-    private String generateRefreshToken(String email) {
-        Date date = Date.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
-        return Jwts.builder()
+                .claims(Map.of("name","test","age",15))
                 .subject(email)
                 .expiration(date)
                 .signWith(getSingInKey())

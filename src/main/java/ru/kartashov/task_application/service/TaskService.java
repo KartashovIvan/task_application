@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-import ru.kartashov.task_application.dto.ChangeStatusRequest;
-import ru.kartashov.task_application.dto.NewTaskRequest;
-import ru.kartashov.task_application.dto.TaskResponse;
-import ru.kartashov.task_application.dto.UpdateTaskRequest;
+import ru.kartashov.task_application.dto.request.ChangeStatusRequest;
+import ru.kartashov.task_application.dto.request.NewTaskRequest;
+import ru.kartashov.task_application.dto.response.TaskResponse;
+import ru.kartashov.task_application.dto.request.UpdateTaskRequest;
 import ru.kartashov.task_application.entity.PriorityTask;
 import ru.kartashov.task_application.entity.StatusTask;
 import ru.kartashov.task_application.entity.Task;
@@ -17,6 +17,7 @@ import ru.kartashov.task_application.repository.CommentRepository;
 import ru.kartashov.task_application.repository.TaskRepository;
 import ru.kartashov.task_application.utils.JwtUtils;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 import static ru.kartashov.task_application.entity.StatusTask.*;
@@ -134,6 +135,18 @@ public class TaskService {
         return parseTaskToResponse(task);
     }
 
+    public Slice<TaskResponse> takeAuthorTasks(String emailAuthor, Integer offset, Integer limit) {
+        User user = userService.takeUserByEmail(emailAuthor);
+        return taskRepository.findByAuthor(user, PageRequest.of(offset, limit))
+                .map(this::parseTaskToResponse);
+    }
+
+    public Slice<TaskResponse> takeExecutorTasks(String emailExecutor, Integer offset, Integer limit) {
+        User user = userService.takeUserByEmail(emailExecutor);
+        return taskRepository.findByExecutor(user, PageRequest.of(offset, limit))
+                .map(this::parseTaskToResponse);
+    }
+
     private void editTaskInformation(Task task, UpdateTaskRequest updateRequest) {
         if (validateTitle(updateRequest.getTitle())) {
             task.setTitle(updateRequest.getTitle());
@@ -210,6 +223,4 @@ public class TaskService {
         }
         return userService.takeUserByEmail(email);
     }
-
-
 }

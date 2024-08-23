@@ -5,3 +5,6 @@ databaseChangeLog:
       file: db/changelog/202408181158-create-tasks.xml
   - include:
       file: db/changelog/202408181210-create-comments.xml
+  - include:
+      file: db/changelog/202408181210-create-test-user.xml
+

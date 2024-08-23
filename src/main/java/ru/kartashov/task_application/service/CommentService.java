@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-import ru.kartashov.task_application.dto.CommentResponse;
-import ru.kartashov.task_application.dto.NewCommentRequest;
+import ru.kartashov.task_application.dto.response.CommentResponse;
+import ru.kartashov.task_application.dto.request.NewCommentRequest;
 import ru.kartashov.task_application.entity.Comment;
 import ru.kartashov.task_application.entity.Task;
 import ru.kartashov.task_application.entity.User;
@@ -24,10 +24,15 @@ public class CommentService {
 
         User user = userService.takeUserByEmail(JwtUtils.takeUserEmailFromSession());
 
+        if (comment.getText() == null || comment.getText().isBlank()) {
+            throw new RuntimeException("Text comment can't be empty");
+        }
+
         commentRepository.save(Comment.builder()
                 .author(user)
                 .text(comment.getText())
                 .task(task).build());
+
     }
 
     public Slice<CommentResponse> showAllComments(String id, Integer offset, Integer limit) {
