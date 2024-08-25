@@ -14,11 +14,3 @@ spring:
 jwt:
   security:
     token: cd30e0f4dfc42f7a2eeeefd0cf7f7fd68ab116ca73a55ee326b3d5822d4cdd3b
-
-
-#logging:
-#  appender: FILE
-#  level:
-#    root: info
-#  file:
-#    name: log/logs.log
